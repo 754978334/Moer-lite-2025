@@ -12,7 +12,7 @@ Ray PinholeCamera::sampleRay(const CameraSample &sample, Vector2f NDC) const {
   Vector3f direction = Vector3f{x, y, z};
   direction = normalize(transform.toWorld(direction));
   Point3f origin = transform.toWorld(Point3f(0));
-
+      
   // TODO 如果要实现动态模糊，那么此处需要根据sample中的time采样一个时间
   return Ray(origin, direction, tNear, tFar, timeStart);
 }

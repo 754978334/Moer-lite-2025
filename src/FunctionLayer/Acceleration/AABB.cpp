@@ -41,10 +41,48 @@ bool AABB::Overlap(const AABB &other) const {
 
 bool AABB::RayIntersect(const Ray &ray, float *tMin, float *tMax) const {
   //* todo 实现AABB与光线求交
-  return false;
+  float _tMin = 0.0f;
+  float _tMax = std::numeric_limits<float>::max();
+
+  // X Axis
+  for(int i = 0; i < 3; ++i){
+    if(ray.direction[i] != 0.0f) {
+      float t0 = (pMin[i] - ray.origin[i]) / ray.direction[i];
+      float t1 = (pMax[i] - ray.origin[i]) / ray.direction[i];
+      if(t0 > t1) std::swap(t0, t1);    // make sure t0 < t1
+      _tMin = std::max(_tMin, t0);
+      _tMax = std::min(_tMax, t1);
+    }
+  }
+  if(_tMax < _tMin) return false;
+  
+  if(tMin)*tMin = _tMin;
+  if(tMax)*tMax = _tMax;
+
+  return true;
 }
 
 Point3f AABB::Center() const {
   return Point3f{(pMin[0] + pMax[0]) * .5f, (pMin[1] + pMax[1]) * .5f,
                  (pMin[2] + pMax[2]) * .5f};
+}
+
+size_t AABB::MaxDimension() const {
+  size_t dim = 0;
+  for (int i = 1; i < 3; ++i) {
+    if (pMax[i] - pMin[i] > pMax[dim] - pMin[dim]) {
+      dim = i;
+    }
+  }
+  return dim;
+}
+
+float AABB::SurfaceArea() const {
+  Vector3f d = pMax - pMin;
+  return 2 * (d[0] * d[1] + d[1] * d[2] + d[2] * d[0]);
+}
+
+float AABB::Volume() const {
+  Vector3f d = pMax - pMin;
+  return d[0] * d[1] * d[2];
 }

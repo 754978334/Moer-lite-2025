@@ -26,6 +26,13 @@ public:
 
   Point3f Center() const;
 
+  // maximum extent in any dimension
+  size_t MaxDimension() const;
+
+  float SurfaceArea() const;
+
+  float Volume() const;
+
 public:
   Point3f pMin, pMax;
 };
